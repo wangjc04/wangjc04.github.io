@@ -4,11 +4,11 @@
   
   
   <entry>
-    <title>Hello World</title>
+    <title>演讲稿生成器</title>
     <link href="/2025/07/07/dify1/"/>
     <url>/2025/07/07/dify1/</url>
     
-    <content type="html"><![CDATA[<p>this page is for test.</p>]]></content>
+    <content type="html"><![CDATA[<p>这是一个演讲稿生成器，根据用户提供的pdf文档等资料生成演讲稿</p>]]></content>
     
     
     
