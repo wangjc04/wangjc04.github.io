@@ -34,121 +34,61 @@
   <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
 
-  <!-- 嵌入的PDF转换工具样式 -->
+  <!-- 嵌入的PDF转换工具样式 - 忠实于原始样式 -->
   <style>
-    .pdf-converter-card {
-      width: 100%;
-      max-width: 400px;
-      margin: 2rem auto;
+    .embedded-converter {
+      margin: 2rem 0;
+      padding: 0;
+    }
+    
+    .embedded-converter * {
+      box-sizing: border-box;
+      font-family: -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+    
+    .embedded-converter .card {
+      width: 320px;
       padding: 2rem;
       border-radius: 12px;
       background: #fff;
       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
       text-align: center;
-      border: 1px solid #e1e5e9;
+      margin: 0 auto;
     }
     
-    .pdf-converter-card h3 {
+    .embedded-converter h3 {
       font-size: 1.25rem;
       margin: 0 0 1.5rem;
       color: #333;
-      font-weight: 600;
     }
     
-    .pdf-file-input {
+    .embedded-converter .file-input {
       display: none;
     }
     
-    .pdf-btn {
+    .embedded-converter .btn {
       display: inline-block;
-      padding: 0.8rem 1.5rem;
-      font-size: 0.95rem;
+      padding: .6rem 1.5rem;
+      font-size: .95rem;
       font-weight: 600;
       border: 0;
       border-radius: 6px;
       background: #4f46e5;
       color: #fff;
       cursor: pointer;
-      transition: all 0.2s ease;
-      text-decoration: none;
+      transition: background .2s ease;
     }
     
-    .pdf-btn:hover {
+    .embedded-converter .btn:hover {
       background: #4338ca;
-      color: #fff;
-      text-decoration: none;
-      transform: translateY(-1px);
     }
     
-    .pdf-btn:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
-    }
-    
-    .pdf-filename {
+    .embedded-converter #filename {
       display: block;
-      margin-top: 0.75rem;
-      font-size: 0.85rem;
+      margin-top: .75rem;
+      font-size: .85rem;
       color: #555;
       word-break: break-all;
-      min-height: 1.2rem;
-    }
-    
-    .pdf-upload-area {
-      margin: 1.5rem 0;
-      padding: 1.5rem;
-      border: 2px dashed #d1d5db;
-      border-radius: 8px;
-      background: #f9fafb;
-      transition: all 0.2s ease;
-    }
-    
-    .pdf-upload-area:hover {
-      border-color: #4f46e5;
-      background: #f5f7ff;
-    }
-    
-    .pdf-upload-area.dragover {
-      border-color: #4f46e5;
-      background: #f0f4ff;
-    }
-    
-    .upload-icon {
-      font-size: 2rem;
-      color: #6b7280;
-      margin-bottom: 0.5rem;
-    }
-    
-    .upload-text {
-      color: #6b7280;
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .status-message {
-      margin-top: 1rem;
-      padding: 0.75rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      display: none;
-    }
-    
-    .status-success {
-      background: #d1fae5;
-      color: #065f46;
-      border: 1px solid #a7f3d0;
-    }
-    
-    .status-error {
-      background: #fee2e2;
-      color: #991b1b;
-      border: 1px solid #fca5a5;
-    }
-    
-    .status-loading {
-      background: #dbeafe;
-      color: #1e40af;
-      border: 1px solid #93c5fd;
     }
   </style>
 
@@ -275,47 +215,22 @@
                 <h1 id="seo-header">PDF → Markdown 工具</h1>
                 
                 <div class="markdown-body">
-                  <p>将用户上传的PDF文件转换为markdown格式，支持拖放上传和在线转换。</p>
+                  <p>将用户上传的PDF文件转换为markdown</p>
                   
-                  <!-- 嵌入的PDF转换工具 -->
-                  <div class="pdf-converter-card">
-                    <h3>PDF 转 Markdown 转换器</h3>
-                    
-                    <div class="pdf-upload-area" id="uploadArea">
-                      <div class="upload-icon">📄</div>
-                      <div class="upload-text">拖放PDF文件到此处</div>
-                      <div class="upload-text">或点击下方按钮选择文件</div>
+                  <!-- 嵌入的PDF转换工具 - 完全保持原始逻辑 -->
+                  <div class="embedded-converter">
+                    <div class="card">
+                      <h3>上传 PDF 转换为 Markdown</h3>
+                      <form id="uploadForm" action="http://422f4373.r40.cpolar.top/upload" method="post" enctype="multipart/form-data">
+                        <label class="btn">
+                          选择 PDF
+                          <input class="file-input" type="file" name="file" accept=".pdf" required="">
+                        </label>
+                        <button class="btn" type="submit" style="margin-top:1rem;width:100%">上传并转换</button>
+                        <span id="filename"></span>
+                      </form>
                     </div>
-                    
-                    <form id="uploadForm" action="http://422f4373.r40.cpolar.top/upload" method="post" enctype="multipart/form-data">
-                      <label class="pdf-btn">
-                        选择 PDF 文件
-                        <input class="pdf-file-input" type="file" name="file" accept=".pdf" required>
-                      </label>
-                      <button class="pdf-btn" type="submit" style="margin-top:1rem;width:100%;max-width:300px;">
-                        上传并转换
-                      </button>
-                      <span class="pdf-filename" id="filename"></span>
-                    </form>
-                    
-                    <div class="status-message" id="statusMessage"></div>
                   </div>
-                  
-                  <h2>使用说明</h2>
-                  <ul>
-                    <li>支持拖放上传：直接将PDF文件拖放到上传区域</li>
-                    <li>点击选择：点击"选择 PDF 文件"按钮浏览本地文件</li>
-                    <li>自动转换：上传后系统将自动将PDF转换为Markdown格式</li>
-                    <li>支持格式：目前仅支持PDF格式文件</li>
-                  </ul>
-                  
-                  <h2>功能特点</h2>
-                  <ul>
-                    <li>🚀 快速转换：高效的PDF解析和Markdown生成</li>
-                    <li>📱 响应式设计：支持桌面端和移动端使用</li>
-                    <li>🎯 精准识别：保持原文档的格式和结构</li>
-                    <li>🔒 安全可靠：文件处理过程安全，不保存用户数据</li>
-                  </ul>
                 </div>
                 
                 <hr/>
@@ -446,104 +361,17 @@
 
   <script src="/js/img-lazyload.js"></script>
 
-  <!-- 嵌入的PDF转换工具脚本 -->
+  <!-- 嵌入的PDF转换工具脚本 - 完全保持原始逻辑 -->
   <script>
-    // 文件选择功能
-    const input = document.querySelector('.pdf-file-input');
+    const input = document.querySelector('.file-input');
     const filenameSpan = document.getElementById('filename');
-    const uploadArea = document.getElementById('uploadArea');
-    const statusMessage = document.getElementById('statusMessage');
-    const uploadForm = document.getElementById('uploadForm');
-
-    // 文件选择事件
-    input.addEventListener('change', function() {
+    input.addEventListener('change', () => {
       if (input.files.length) {
         filenameSpan.textContent = input.files[0].name;
-        showStatus('已选择文件: ' + input.files[0].name, 'info');
       } else {
         filenameSpan.textContent = '';
-        hideStatus();
       }
     });
-
-    // 拖放功能
-    uploadArea.addEventListener('dragover', function(e) {
-      e.preventDefault();
-      uploadArea.classList.add('dragover');
-    });
-
-    uploadArea.addEventListener('dragleave', function(e) {
-      e.preventDefault();
-      uploadArea.classList.remove('dragover');
-    });
-
-    uploadArea.addEventListener('drop', function(e) {
-      e.preventDefault();
-      uploadArea.classList.remove('dragover');
-      
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        const file = files[0];
-        if (file.type === 'application/pdf') {
-          input.files = files;
-          filenameSpan.textContent = file.name;
-          showStatus('已选择文件: ' + file.name, 'info');
-        } else {
-          showStatus('请选择PDF格式的文件', 'error');
-        }
-      }
-    });
-
-    // 表单提交
-    uploadForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      if (!input.files.length) {
-        showStatus('请先选择一个PDF文件', 'error');
-        return;
-      }
-
-      const formData = new FormData(uploadForm);
-      showStatus('正在上传和转换文件，请稍候...', 'loading');
-
-      fetch(uploadForm.action, {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.blob())
-      .then(blob => {
-        // 创建下载链接
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = input.files[0].name.replace('.pdf', '.md');
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-        
-        showStatus('转换完成！文件已开始下载', 'success');
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        showStatus('转换失败，请重试', 'error');
-      });
-    });
-
-    // 状态显示功能
-    function showStatus(message, type) {
-      statusMessage.textContent = message;
-      statusMessage.className = 'status-message status-' + type;
-      statusMessage.style.display = 'block';
-      
-      if (type === 'success') {
-        setTimeout(hideStatus, 5000);
-      }
-    }
-
-    function hideStatus() {
-      statusMessage.style.display = 'none';
-    }
   </script>
 
   <script>
