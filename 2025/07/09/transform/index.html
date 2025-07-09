@@ -1,72 +1,156 @@
-
-
 <!DOCTYPE html>
 <html lang="zh-CN" data-default-color-scheme=auto>
 
-
-
 <head>
   <meta charset="UTF-8">
-
   <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
   <link rel="icon" href="/img/fluid.png">
-  
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
   <meta name="theme-color" content="#2f4154">
   <meta name="author" content="Group7">
   <meta name="keywords" content="">
-  
-    <meta name="description" content="将用户上传的PDF文件转换为markdown">
-<meta property="og:type" content="article">
-<meta property="og:title" content="PDF → Markdown 工具">
-<meta property="og:url" content="http://example.com/2025/07/09/transform/index.html">
-<meta property="og:site_name" content="Dify智能体搭建">
-<meta property="og:description" content="将用户上传的PDF文件转换为markdown">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-07-09T01:54:48.395Z">
-<meta property="article:modified_time" content="2025-07-09T01:56:42.091Z">
-<meta property="article:author" content="Group7">
-<meta name="twitter:card" content="summary_large_image">
-  
-  
+  <meta name="description" content="将用户上传的PDF文件转换为markdown">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="PDF → Markdown 工具">
+  <meta property="og:url" content="http://example.com/2025/07/09/transform/index.html">
+  <meta property="og:site_name" content="Dify智能体搭建">
+  <meta property="og:description" content="将用户上传的PDF文件转换为markdown">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="article:published_time" content="2025-07-09T01:54:48.395Z">
+  <meta property="article:modified_time" content="2025-07-09T01:56:42.091Z">
+  <meta property="article:author" content="Group7">
+  <meta name="twitter:card" content="summary_large_image">
   
   <title>PDF → Markdown 工具 - Dify智能体搭建</title>
 
-  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
-
-
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-<!-- Do not modify the link that theme dependent icons -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-
+  <link rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+  <link rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+  <link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+  <link rel="stylesheet" href="/css/main.css" />
   <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
-  
-    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
-  
+  <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
 
-
-
+  <!-- 嵌入的PDF转换工具样式 -->
+  <style>
+    .pdf-converter-card {
+      width: 100%;
+      max-width: 400px;
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      text-align: center;
+      border: 1px solid #e1e5e9;
+    }
+    
+    .pdf-converter-card h3 {
+      font-size: 1.25rem;
+      margin: 0 0 1.5rem;
+      color: #333;
+      font-weight: 600;
+    }
+    
+    .pdf-file-input {
+      display: none;
+    }
+    
+    .pdf-btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: 0;
+      border-radius: 6px;
+      background: #4f46e5;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    
+    .pdf-btn:hover {
+      background: #4338ca;
+      color: #fff;
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+    
+    .pdf-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+    }
+    
+    .pdf-filename {
+      display: block;
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: #555;
+      word-break: break-all;
+      min-height: 1.2rem;
+    }
+    
+    .pdf-upload-area {
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      border: 2px dashed #d1d5db;
+      border-radius: 8px;
+      background: #f9fafb;
+      transition: all 0.2s ease;
+    }
+    
+    .pdf-upload-area:hover {
+      border-color: #4f46e5;
+      background: #f5f7ff;
+    }
+    
+    .pdf-upload-area.dragover {
+      border-color: #4f46e5;
+      background: #f0f4ff;
+    }
+    
+    .upload-icon {
+      font-size: 2rem;
+      color: #6b7280;
+      margin-bottom: 0.5rem;
+    }
+    
+    .upload-text {
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .status-message {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      display: none;
+    }
+    
+    .status-success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    
+    .status-error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+    
+    .status-loading {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #93c5fd;
+    }
+  </style>
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
@@ -78,420 +162,262 @@
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-  
-
-
-  
-<meta name="generator" content="Hexo 7.3.0">
-<style>
-.pdf2md-card{max-width:480px;margin:2rem auto;padding:2rem;border-radius:12px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.08);text-align:center}
-.pdf2md-card h2{font-size:1.25rem;margin-bottom:1.5rem;color:#333}
-.pdf2md-btn{display:inline-block;padding:.6rem 1.5rem;font-size:.95rem;font-weight:600;border:0;border-radius:6px;background:#4f46e5;color:#fff;cursor:pointer;transition:background .2s ease}
-.pdf2md-btn:hover{background:#4338ca}
-.pdf2md-filename{display:block;margin-top:.75rem;font-size:.85rem;color:#555;word-break:break-all}
-</style>
-
+  <script src="/js/utils.js"></script>
+  <script src="/js/color-schema.js"></script>
 </head>
 
-
 <body>
-  
-
   <header>
-    
+    <div class="header-inner" style="height: 70vh;">
+      <nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+        <div class="container">
+          <a class="navbar-brand" href="/">
+            <strong>Fluid</strong>
+          </a>
 
-<div class="header-inner" style="height: 70vh;">
-  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand" href="/">
-      <strong>Fluid</strong>
-    </a>
+          <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+                  data-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="animated-icon"><span></span><span></span><span></span></div>
+          </button>
 
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/" target="_self">
-                <i class="iconfont icon-home-fill"></i>
-                <span>首页</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/" target="_self">
-                <i class="iconfont icon-archive-fill"></i>
-                <span>归档</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/" target="_self">
-                <i class="iconfont icon-category-fill"></i>
-                <span>分类</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/" target="_self">
-                <i class="iconfont icon-tags-fill"></i>
-                <span>标签</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/" target="_self">
-                <i class="iconfont icon-user-fill"></i>
-                <span>关于</span>
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              <i class="iconfont icon-search"></i>
-            </a>
-          </li>
-          
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
-              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
-            </a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-</nav>
-
-  
-
-<div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
-  <div class="full-bg-img">
-    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-      <div class="banner-text text-center fade-in-up">
-        <div class="h2">
-          
-            <span id="subtitle" data-typed-text="PDF → Markdown 工具"></span>
-          
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto text-center">
+              <li class="nav-item">
+                <a class="nav-link" href="/" target="_self">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/archives/" target="_self">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/categories/" target="_self">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/tags/" target="_self">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/about/" target="_self">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </a>
+              </li>
+              <li class="nav-item" id="search-btn">
+                <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+                  <i class="iconfont icon-search"></i>
+                </a>
+              </li>
+              <li class="nav-item" id="color-toggle-btn">
+                <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+                  <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
+      </nav>
 
-        
-          
-  <div class="mt-3">
-    
-    
-      <span class="post-meta">
-        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-07-09 09:54" pubdate>
-          2025年7月9日 上午
-        </time>
-      </span>
-    
-  </div>
+      <div id="banner" class="banner" parallax=true
+           style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+        <div class="full-bg-img">
+          <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+            <div class="banner-text text-center fade-in-up">
+              <div class="h2">
+                <span id="subtitle" data-typed-text="PDF → Markdown 工具"></span>
+              </div>
 
-  <div class="mt-1">
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-chart"></i>
-        
-          12 字
-        
-      </span>
-    
+              <div class="mt-3">
+                <span class="post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2025-07-09 09:54" pubdate>
+                    2025年7月9日 上午
+                  </time>
+                </span>
+              </div>
 
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-clock-fill"></i>
-        
-        
-        
-          1 分钟
-        
-      </span>
-    
-
-    
-    
-  </div>
-
-
-        
+              <div class="mt-1">
+                <span class="post-meta mr-2">
+                  <i class="iconfont icon-chart"></i>
+                  12 字
+                </span>
+                <span class="post-meta mr-2">
+                  <i class="iconfont icon-clock-fill"></i>
+                  1 分钟
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      
     </div>
-  </div>
-</div>
-
-</div>
-
   </header>
 
   <main>
-    
-      
+    <div class="container-fluid nopadding-x">
+      <div class="row nomargin-x">
+        <div class="side-col d-none d-lg-block col-lg-2"></div>
 
-<div class="container-fluid nopadding-x">
-  <div class="row nomargin-x">
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-
-    </div>
-
-    <div class="col-lg-8 nopadding-x-md">
-      <div class="container nopadding-x-md" id="board-ctn">
-        <div id="board">
-          <article class="post-content mx-auto">
-            <h1 id="seo-header">PDF → Markdown 工具</h1>
-            
-            
-              <div class="markdown-body">
+        <div class="col-lg-8 nopadding-x-md">
+          <div class="container nopadding-x-md" id="board-ctn">
+            <div id="board">
+              <article class="post-content mx-auto">
+                <h1 id="seo-header">PDF → Markdown 工具</h1>
                 
+                <div class="markdown-body">
+                  <p>将用户上传的PDF文件转换为markdown格式，支持拖放上传和在线转换。</p>
+                  
+                  <!-- 嵌入的PDF转换工具 -->
+                  <div class="pdf-converter-card">
+                    <h3>PDF 转 Markdown 转换器</h3>
+                    
+                    <div class="pdf-upload-area" id="uploadArea">
+                      <div class="upload-icon">📄</div>
+                      <div class="upload-text">拖放PDF文件到此处</div>
+                      <div class="upload-text">或点击下方按钮选择文件</div>
+                    </div>
+                    
+                    <form id="uploadForm" action="http://422f4373.r40.cpolar.top/upload" method="post" enctype="multipart/form-data">
+                      <label class="pdf-btn">
+                        选择 PDF 文件
+                        <input class="pdf-file-input" type="file" name="file" accept=".pdf" required>
+                      </label>
+                      <button class="pdf-btn" type="submit" style="margin-top:1rem;width:100%;max-width:300px;">
+                        上传并转换
+                      </button>
+                      <span class="pdf-filename" id="filename"></span>
+                    </form>
+                    
+                    <div class="status-message" id="statusMessage"></div>
+                  </div>
+                  
+                  <h2>使用说明</h2>
+                  <ul>
+                    <li>支持拖放上传：直接将PDF文件拖放到上传区域</li>
+                    <li>点击选择：点击"选择 PDF 文件"按钮浏览本地文件</li>
+                    <li>自动转换：上传后系统将自动将PDF转换为Markdown格式</li>
+                    <li>支持格式：目前仅支持PDF格式文件</li>
+                  </ul>
+                  
+                  <h2>功能特点</h2>
+                  <ul>
+                    <li>🚀 快速转换：高效的PDF解析和Markdown生成</li>
+                    <li>📱 响应式设计：支持桌面端和移动端使用</li>
+                    <li>🎯 精准识别：保持原文档的格式和结构</li>
+                    <li>🔒 安全可靠：文件处理过程安全，不保存用户数据</li>
+                  </ul>
+                </div>
                 
-<div class="pdf2md-card">
-  <h2>上传 PDF 转换为 Markdown</h2>
-  <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-    <label class="pdf2md-btn">
-      选择 PDF
-      <input class="file-input" type="file" name="file" accept=".pdf" required style="display:none;">
-    </label>
-    <button class="pdf2md-btn" type="submit" style="margin-top:1rem;width:100%">上传并转换</button>
-    <span id="filename" class="pdf2md-filename"></span>
-  </form>
-</div>
-<script>
-  (function(){
-    const input = document.querySelector('.pdf2md-card .file-input');
-    const filenameSpan = document.querySelector('.pdf2md-card #filename');
-    if(input){
-      input.addEventListener('change', () => {
-        filenameSpan.textContent = input.files.length ? input.files[0].name : '';
-      });
-    }
-  })();
-</script>
+                <hr/>
+                <div>
+                  <div class="post-metas my-3"></div>
 
+                  <div class="license-box my-3">
+                    <div class="license-title">
+                      <div>PDF → Markdown 工具</div>
+                      <div>http://example.com/2025/07/09/transform/</div>
+                    </div>
+                    <div class="license-meta">
+                      <div class="license-meta-item">
+                        <div>作者</div>
+                        <div>Group7</div>
+                      </div>
+                      <div class="license-meta-item license-meta-date">
+                        <div>发布于</div>
+                        <div>2025年7月9日</div>
+                      </div>
+                      <div class="license-meta-item">
+                        <div>许可协议</div>
+                        <div>
+                          <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                            <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                              <i class="iconfont icon-cc-by"></i>
+                            </span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="license-icon iconfont"></div>
+                  </div>
 
-                
-              </div>
-            
-            <hr/>
-            <div>
-              <div class="post-metas my-3">
-  
-  
-</div>
-
-
-              
-  
-
-  <div class="license-box my-3">
-    <div class="license-title">
-      <div>PDF → Markdown 工具</div>
-      <div>http://example.com/2025/07/09/transform/</div>
-    </div>
-    <div class="license-meta">
-      
-        <div class="license-meta-item">
-          <div>作者</div>
-          <div>Group7</div>
-        </div>
-      
-      
-        <div class="license-meta-item license-meta-date">
-          <div>发布于</div>
-          <div>2025年7月9日</div>
-        </div>
-      
-      
-      
-        <div class="license-meta-item">
-          <div>许可协议</div>
-          <div>
-            
-              
-              
-                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
-                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                    <i class="iconfont icon-cc-by"></i>
-                  </span>
-                </a>
-              
-            
-          </div>
-        </div>
-      
-    </div>
-    <div class="license-icon iconfont"></div>
-  </div>
-
-
-
-              
-                <div class="post-prevnext my-3">
-                  <article class="post-prev col-6">
-                    
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
+                  <div class="post-prevnext my-3">
+                    <article class="post-prev col-6"></article>
+                    <article class="post-next col-6">
                       <a href="/2025/07/07/dify1/" title="演讲稿生成器">
                         <span class="hidden-mobile">演讲稿生成器</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
-                    
-                  </article>
+                    </article>
+                  </div>
                 </div>
-              
+              </article>
             </div>
+          </div>
+        </div>
 
-            
-          </article>
+        <div class="side-col d-none d-lg-block col-lg-2">
+          <aside class="sidebar" style="margin-left: -1rem">
+            <div id="toc">
+              <p class="toc-header">
+                <i class="iconfont icon-list"></i>
+                <span>目录</span>
+              </p>
+              <div class="toc-body" id="toc-body"></div>
+            </div>
+          </aside>
         </div>
       </div>
     </div>
 
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-  <aside class="sidebar" style="margin-left: -1rem">
-    <div id="toc">
-  <p class="toc-header">
-    <i class="iconfont icon-list"></i>
-    <span>目录</span>
-  </p>
-  <div class="toc-body" id="toc-body"></div>
-</div>
+    <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
 
-
-
-  </aside>
-
-
-    </div>
-  </div>
-</div>
-
-
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-
-
-
-
-    
-
-    
-      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+            <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body mx-3">
+            <div class="md-form mb-5">
+              <input type="text" id="local-search-input" class="form-control validate">
+              <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+            </div>
+            <div class="list-group" id="local-search-result"></div>
+          </div>
         </div>
-        <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
-  </div>
-</div>
-
-    
-
-    
   </main>
 
   <footer>
     <div class="footer-inner">
-  
-    <div class="footer-content">
-       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+      <div class="footer-content">
+        <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> 
+        <i class="iconfont icon-love"></i> 
+        <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+      </div>
     </div>
-  
-  
-  
-</div>
-
   </footer>
 
   <!-- Scripts -->
-  
-  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
-
+  <script src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <link rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
   <script>
     NProgress.configure({"showSpinner":false,"trickleSpeed":100})
     NProgress.start()
@@ -500,14 +426,12 @@
     })
   </script>
 
+  <script src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js"></script>
+  <script src="/js/events.js"></script>
+  <script src="/js/plugins.js"></script>
 
-<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
-<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-
-  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js"></script>
   <script>
     (function (window, document) {
       var typing = Fluid.plugins.typing;
@@ -516,127 +440,198 @@
         return;
       }
       var text = subtitle.getAttribute('data-typed-text');
-      
-        typing(text);
-      
+      typing(text);
     })(window, document);
   </script>
 
+  <script src="/js/img-lazyload.js"></script>
 
+  <!-- 嵌入的PDF转换工具脚本 -->
+  <script>
+    // 文件选择功能
+    const input = document.querySelector('.pdf-file-input');
+    const filenameSpan = document.getElementById('filename');
+    const uploadArea = document.getElementById('uploadArea');
+    const statusMessage = document.getElementById('statusMessage');
+    const uploadForm = document.getElementById('uploadForm');
 
+    // 文件选择事件
+    input.addEventListener('change', function() {
+      if (input.files.length) {
+        filenameSpan.textContent = input.files[0].name;
+        showStatus('已选择文件: ' + input.files[0].name, 'info');
+      } else {
+        filenameSpan.textContent = '';
+        hideStatus();
+      }
+    });
 
-  
-    <script  src="/js/img-lazyload.js" ></script>
-  
+    // 拖放功能
+    uploadArea.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
 
+    uploadArea.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+    });
 
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
-    var toc = jQuery('#toc');
-    if (toc.length === 0 || !window.tocbot) { return; }
-    var boardCtn = jQuery('#board-ctn');
-    var boardTop = boardCtn.offset().top;
-
-    window.tocbot.init(Object.assign({
-      tocSelector     : '#toc-body',
-      contentSelector : '.markdown-body',
-      linkClass       : 'tocbot-link',
-      activeLinkClass : 'tocbot-active-link',
-      listClass       : 'tocbot-list',
-      isCollapsedClass: 'tocbot-is-collapsed',
-      collapsibleClass: 'tocbot-is-collapsible',
-      scrollSmooth    : true,
-      includeTitleTags: true,
-      headingsOffset  : -boardTop,
-    }, CONFIG.toc));
-    if (toc.find('.toc-list-item').length > 0) {
-      toc.css('visibility', 'visible');
-    }
-
-    Fluid.events.registerRefreshCallback(function() {
-      if ('tocbot' in window) {
-        tocbot.refresh();
-        var toc = jQuery('#toc');
-        if (toc.length === 0 || !tocbot) {
-          return;
-        }
-        if (toc.find('.toc-list-item').length > 0) {
-          toc.css('visibility', 'visible');
+    uploadArea.addEventListener('drop', function(e) {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        const file = files[0];
+        if (file.type === 'application/pdf') {
+          input.files = files;
+          filenameSpan.textContent = file.name;
+          showStatus('已选择文件: ' + file.name, 'info');
+        } else {
+          showStatus('请选择PDF格式的文件', 'error');
         }
       }
     });
-  });
-</script>
 
+    // 表单提交
+    uploadForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      if (!input.files.length) {
+        showStatus('请先选择一个PDF文件', 'error');
+        return;
+      }
 
-  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+      const formData = new FormData(uploadForm);
+      showStatus('正在上传和转换文件，请稍候...', 'loading');
 
+      fetch(uploadForm.action, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.blob())
+      .then(blob => {
+        // 创建下载链接
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = input.files[0].name.replace('.pdf', '.md');
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        showStatus('转换完成！文件已开始下载', 'success');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showStatus('转换失败，请重试', 'error');
+      });
+    });
+
+    // 状态显示功能
+    function showStatus(message, type) {
+      statusMessage.textContent = message;
+      statusMessage.className = 'status-message status-' + type;
+      statusMessage.style.display = 'block';
+      
+      if (type === 'success') {
+        setTimeout(hideStatus, 5000);
+      }
+    }
+
+    function hideStatus() {
+      statusMessage.style.display = 'none';
+    }
+  </script>
+
+  <script>
+    Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+      var toc = jQuery('#toc');
+      if (toc.length === 0 || !window.tocbot) { return; }
+      var boardCtn = jQuery('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      window.tocbot.init(Object.assign({
+        tocSelector     : '#toc-body',
+        contentSelector : '.markdown-body',
+        linkClass       : 'tocbot-link',
+        activeLinkClass : 'tocbot-active-link',
+        listClass       : 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        scrollSmooth    : true,
+        includeTitleTags: true,
+        headingsOffset  : -boardTop,
+      }, CONFIG.toc));
+      if (toc.find('.toc-list-item').length > 0) {
+        toc.css('visibility', 'visible');
+      }
+
+      Fluid.events.registerRefreshCallback(function() {
+        if ('tocbot' in window) {
+          tocbot.refresh();
+          var toc = jQuery('#toc');
+          if (toc.length === 0 || !tocbot) {
+            return;
+          }
+          if (toc.find('.toc-list-item').length > 0) {
+            toc.css('visibility', 'visible');
+          }
+        }
+      });
+    });
+  </script>
+
+  <script src="https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js"></script>
   <script>Fluid.plugins.codeWidget();</script>
 
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
-    window.anchors.options = {
-      placement: CONFIG.anchorjs.placement,
-      visible  : CONFIG.anchorjs.visible
-    };
-    if (CONFIG.anchorjs.icon) {
-      window.anchors.options.icon = CONFIG.anchorjs.icon;
-    }
-    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-    var res = [];
-    for (var item of el) {
-      res.push('.markdown-body > ' + item.trim());
-    }
-    if (CONFIG.anchorjs.placement === 'left') {
-      window.anchors.options.class = 'anchorjs-link-left';
-    }
-    window.anchors.add(res.join(', '));
-
-    Fluid.events.registerRefreshCallback(function() {
-      if ('anchors' in window) {
-        anchors.removeAll();
-        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-        var res = [];
-        for (var item of el) {
-          res.push('.markdown-body > ' + item.trim());
-        }
-        if (CONFIG.anchorjs.placement === 'left') {
-          anchors.options.class = 'anchorjs-link-left';
-        }
-        anchors.add(res.join(', '));
+  <script>
+    Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+      window.anchors.options = {
+        placement: CONFIG.anchorjs.placement,
+        visible  : CONFIG.anchorjs.visible
+      };
+      if (CONFIG.anchorjs.icon) {
+        window.anchors.options.icon = CONFIG.anchorjs.icon;
       }
+      var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+      var res = [];
+      for (var item of el) {
+        res.push('.markdown-body > ' + item.trim());
+      }
+      if (CONFIG.anchorjs.placement === 'left') {
+        window.anchors.options.class = 'anchorjs-link-left';
+      }
+      window.anchors.add(res.join(', '));
+
+      Fluid.events.registerRefreshCallback(function() {
+        if ('anchors' in window) {
+          anchors.removeAll();
+          var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+          var res = [];
+          for (var item of el) {
+            res.push('.markdown-body > ' + item.trim());
+          }
+          if (CONFIG.anchorjs.placement === 'left') {
+            anchors.options.class = 'anchorjs-link-left';
+          }
+          anchors.add(res.join(', '));
+        }
+      });
     });
-  });
-</script>
+  </script>
 
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
-    Fluid.plugins.fancyBox();
-  });
-</script>
-
+  <script>
+    Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+      Fluid.plugins.fancyBox();
+    });
+  </script>
 
   <script>Fluid.plugins.imageCaption();</script>
-
-  <script  src="/js/local-search.js" ></script>
-
-
-
-
-
-<!-- 主题的启动项，将它保持在最底部 -->
-<!-- the boot of the theme, keep it at the bottom -->
-<script  src="/js/boot.js" ></script>
-
-
-  
+  <script src="/js/local-search.js"></script>
+  <script src="/js/boot.js"></script>
 
   <noscript>
     <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
